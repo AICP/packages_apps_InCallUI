@@ -56,6 +56,11 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
     private TextView mProviderLabel;
     private TextView mProviderNumber;
     private ViewGroup mSupplementaryInfoContainer;
+    private View mDetailedCallInfo;
+    private TextView mNickName;
+    private TextView mOrganization;
+    private TextView mPosition;
+    private TextView mCity;
 
     // Secondary caller info
     private ViewStub mSecondaryCallInfo;
@@ -145,6 +150,11 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
         mProviderNumber = (TextView) view.findViewById(R.id.providerAddress);
         mSupplementaryInfoContainer =
             (ViewGroup) view.findViewById(R.id.supplementary_info_container);
+        mDetailedCallInfo = view.findViewById(R.id.detailedCallInfo);
+        mNickName = (TextView) view.findViewById(R.id.nickName);
+        mPosition = (TextView) view.findViewById(R.id.position);
+        mOrganization = (TextView) view.findViewById(R.id.organization);
+        mCity = (TextView) view.findViewById(R.id.city);
         ViewGroup photoContainer = (ViewGroup) view.findViewById(R.id.photo_container);
         LayoutTransition transition = photoContainer.getLayoutTransition();
         transition.enableTransitionType(LayoutTransition.CHANGING);
@@ -210,7 +220,8 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
 
     @Override
     public void setPrimary(String number, String name, boolean nameIsNumber, String label,
-            Drawable photo, boolean isConference, boolean isGeneric, boolean isSipCall) {
+            Drawable photo, boolean isConference, boolean isGeneric, boolean isSipCall,
+            String nickName, String organization, String position, String city) {
         Log.d(this, "Setting primary call");
 
         if (isConference) {
@@ -230,6 +241,8 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
         showInternetCallLabel(isSipCall);
 
         setDrawableToImageView(mPhoto, photo);
+
+        setDetailedInfo(nickName, organization, position, city);
     }
 
     @Override
@@ -556,5 +569,39 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
         if (size == eventText.size()) {
             eventText.add(null);
         }
+    }
+
+    private void setDetailedInfo(String nickName, String organization, String position, String city) {
+        boolean show = false;
+        if (!TextUtils.isEmpty(nickName)) {
+            show = true;
+            mNickName.setText(nickName);
+            mNickName.setVisibility(View.VISIBLE);
+        } else {
+            mNickName.setVisibility(View.GONE);
+        }
+        if (!TextUtils.isEmpty(organization)) {
+            show = true;
+            mOrganization.setText(organization);
+            mOrganization.setVisibility(View.VISIBLE);
+        } else {
+            mOrganization.setVisibility(View.GONE);
+        }
+        if (!TextUtils.isEmpty(position)) {
+            show = true;
+            mPosition.setText(position);
+            mPosition.setVisibility(View.VISIBLE);
+        } else {
+            mPosition.setVisibility(View.GONE);
+        }
+        if (!TextUtils.isEmpty(city)) {
+            show = true;
+            mCity.setText(city);
+            mCity.setVisibility(View.VISIBLE);
+        } else {
+            mCity.setVisibility(View.GONE);
+        }
+
+        mDetailedCallInfo.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 }

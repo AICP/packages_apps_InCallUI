@@ -56,7 +56,6 @@ public class ProximitySensor implements AccelerometerListener.ChangeListener,
     private final ProximityListener mProximityListener;
     private int mOrientation = AccelerometerListener.ORIENTATION_UNKNOWN;
     private boolean mUiShowing = false;
-    private boolean mHasIncomingCall = false;
     private boolean mIsPhoneOutgoing = false;
     private boolean mIsPhoneOffhook = false;
     private boolean mProximitySpeaker = false;
@@ -131,7 +130,6 @@ public class ProximitySensor implements AccelerometerListener.ChangeListener,
         // can also put the in-call screen in the INCALL state.
         boolean hasOngoingCall = InCallState.INCALL == newState && callList.hasLiveCall();
         boolean isOffhook = (InCallState.OUTGOING == newState) || hasOngoingCall;
-        mHasIncomingCall = (InCallState.INCOMING == newState);
         boolean isOutgoing = (InCallState.OUTGOING == newState);
 
         // remove any pending audio changes scheduled
@@ -150,10 +148,6 @@ public class ProximitySensor implements AccelerometerListener.ChangeListener,
         } else if (isOutgoing != mIsPhoneOutgoing) {
             mIsPhoneOutgoing = isOutgoing;
             updateProxSpeaker();
-            updateProximitySensorMode();
-        }
-
-        if (mHasIncomingCall) {
             updateProximitySensorMode();
         }
     }
@@ -290,15 +284,15 @@ public class ProximitySensor implements AccelerometerListener.ChangeListener,
                     .add("aud", AudioState.audioRouteToString(audioMode))
                     .toString());
 
-            if ((mIsPhoneOffhook || mHasIncomingCall) && !screenOnImmediately) {
+            if (mIsPhoneOffhook && !screenOnImmediately) {
                 Log.d(this, "Turning on proximity sensor");
                 // Phone is in use!  Arrange for the screen to turn off
                 // automatically when the sensor detects a close object.
                 TelecomAdapter.getInstance().turnOnProximitySensor();
             } else {
                 Log.d(this, "Turning off proximity sensor");
-                // Phone is idle.  We don't want any special proximity sensor
-                // behavior in this case.
+                // Phone is either idle, or ringing.  We don't want any special proximity sensor
+                // behavior in either case.
                 TelecomAdapter.getInstance().turnOffProximitySensor(screenOnImmediately);
             }
     }

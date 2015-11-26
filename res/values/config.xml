@@ -16,4 +16,6 @@
 -->
 <resources>
     <bool name="config_disable_audio_boost">true</bool>
+
+    <bool name="config_uses_yamaha_sound">false</bool>
 </resources>

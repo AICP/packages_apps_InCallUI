@@ -121,8 +121,6 @@ public class InCallActivity extends Activity {
     private boolean[] mDsdaTabAdd = {false, false};
     private boolean mDismissKeyguard = false;
 
-    private Context mContext;
-
     AnimationListenerAdapter mSlideOutListener = new AnimationListenerAdapter() {
         @Override
         public void onAnimationEnd(Animation animation) {
@@ -385,7 +383,7 @@ public class InCallActivity extends Activity {
     }
 
     private boolean usesYamahaSound() {
-        return mContext.getResources().getBoolean(R.bool.config_uses_yamaha_sound);
+        return getResources().getBoolean(R.bool.config_uses_yamaha_sound);
     }
 
     /**
